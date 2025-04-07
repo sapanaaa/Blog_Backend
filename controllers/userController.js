@@ -12,26 +12,24 @@ export const registerUser = async (req, res) => {
     }
   
     try {
-      const existingUser = await User.findOne({ email });
+      const existingUser = await User.findOne({ email }); //find the user using email as unique id
       if (existingUser) {
         return res
           .status(400)
           .json({ message: "You already have an account, don't you remember?" });
       }
   
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10); //hash the password using bcrypt
   
-      const newUser = new User({
+      const newUser = new User({ //register new user
         name,
         email,
         password: hashedPassword,
       });
   
-      await newUser.save();
+      await newUser.save(); //after completing register, save the data
   
-      res
-        .status(201)
-        .json({ message: "Wauuu account created successfully 🥳🎈" });
+      res.status(201).json({ message: "Wauuu account created successfully 🥳🎈" });//account registered successfully
     } catch (error) {
       console.error(error); // helpful for debugging
       res.status(500).json({ message: "Error occurred, please try again later" });
@@ -41,17 +39,17 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async(req,res)=>
   {
-  const {email,password}= req.body;
+  const {email,password}= req.body; //pass the values through frontend
   if(!email || !password){
-    return res.status(400).json({message:"You are not authorized user😡🤬!!"});
+    return res.status(400).json({message:"You are not authorized user😡🤬!!"});//case if one or both values aren't passed
   }
   try {
-    const user = await User.findOne({email});
+    const user = await User.findOne({email}); //find user through email
     if (!user)
     {
       res.status(400).json({message:"Email not found😒"});
     }
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    const isPasswordCorrect = await bcrypt.compare(password, user.password); //hash the password through bcrypt and compare it to saved password
     if(!isPasswordCorrect){
       return res.status(400).json({message:"Wrong password please write correct password"});
     }
