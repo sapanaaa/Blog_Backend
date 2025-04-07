@@ -11,7 +11,17 @@ export const createBlogPost = async(req, res)=>{
         }
         //verify token and get the user details
         const decoded = jwt.verify(token, process.env.JWT_SECRET);//verify the token(1st one) in the cookie with environment variable token
+        const userId = decoded.userId;
+        const name= decoded.name;
+        const email = decoded.email;
 
+        //create a new blog post with the user details
+        const blog = new Blog({
+            ...req.body,
+            user:userId, //attach userId, name, email
+            name: name,
+            email:email,
+        });
     }
     catch{}
 }
