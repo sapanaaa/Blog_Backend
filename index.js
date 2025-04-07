@@ -4,6 +4,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectdb from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
+
 
 dotenv.config();
 
@@ -17,6 +19,7 @@ app.use(cookieParser());
 
 //routes
 app.use('/api',userRoutes);
+app.use('/api',blogRoutes);
 
 //start server
 const PORT= 8080;

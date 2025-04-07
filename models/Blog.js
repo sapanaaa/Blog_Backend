@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import User from "./User.js";
 
 const blogSchema= new mongoose.Schema({//create a new schema
     title:{
