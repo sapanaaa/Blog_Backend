@@ -22,6 +22,20 @@ export const createBlogPost = async(req, res)=>{
             name: name,
             email:email,
         });
+        await blog.save();
+
+        //return the blog along with user details
+         res.status(201).json({message: "Congratulations 🥳 Your blog has been created!!",
+            blog:{
+                ...blog.toObject(),
+                user:{
+                    userId, name, email,
+                },
+            },
+         });
+
     }
-    catch{}
-}
+    catch(error){
+        res.status(400).json({message:"Error occured please try again later🙏"});
+    }
+};
