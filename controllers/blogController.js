@@ -10,7 +10,7 @@ export const createBlogPost = async(req, res)=>{
             return res.status(401).json({message: "You are not authorized user!!! Token not found in cookies"});
         }
         //verify token and get the user details
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);//verify the token in the cookie with environment variable token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);//verify the token(1st one) in the cookie with environment variable token
 
     }
     catch{}

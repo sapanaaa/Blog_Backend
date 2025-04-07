@@ -53,7 +53,7 @@ export const loginUser = async(req,res)=>
     if(!isPasswordCorrect){
       return res.status(400).json({message:"Wrong password please write correct password"});
     }
-    const token= jwt.sign({userID:user._id}, process.env.JWTTOKEN, {expiresIn:'10m'});
+    const token= jwt.sign({userID:user._id}, process.env.JWT_SECRET, {expiresIn:'10m'});
     res.cookie('token', token, {httpOnly: true, //token has 4 properties which accepts http requests
                                 secure:process.env.NODE_ENV=== 'Production', //secure
                                 sameSite:'strict',
