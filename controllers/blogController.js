@@ -47,12 +47,25 @@ export const createBlogPost = async(req, res)=>{
 
 //get blogs
 
-export const getALLBlogPosts = async (res,req)=>{
+export const getALLBlogPosts = async (req,res)=>{
     try{
-        const blogs= await Blog.find.populate('user', 'email');
-        res.status(blogs);
+        const blogs= await Blog.find().populate('user', 'email');
+        res.status(200).json(blogs);
     }
     catch(error){
         res.status(500).json({message:"Error occured!!!"});
     }
 };
+//get blog by id
+export const getBlogPostById = async (req,res)=>{
+    try{
+        const blog= await Blog.findById(req.params.id).populate('user', 'email');
+        if(!blog){
+            return res.status(404).json({message:"Blog not found"});
+        }
+        res.status(200).json(blog);
+    }
+    catch(error){
+        res.status(500).json({message:"Error occured!!!"});
+    }
+}
