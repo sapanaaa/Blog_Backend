@@ -44,3 +44,15 @@ export const createBlogPost = async(req, res)=>{
     }
    
 };
+
+//get blogs
+
+export const getALLBlogPosts = async (res,req)=>{
+    try{
+        const blogs= await Blog.find.populate('user', 'email');
+        res.status(blogs);
+    }
+    catch(error){
+        res.status(500).json({message:"Error occured!!!"});
+    }
+};
