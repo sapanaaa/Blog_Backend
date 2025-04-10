@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { request, response } from 'express';
 
+//register user
 export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
   
@@ -36,7 +37,7 @@ export const registerUser = async (req, res) => {
     }
   };
 
-
+//login user
 export const loginUser = async(req,res)=>
   {
   const {email,password}= req.body; //pass the values through frontend
@@ -64,7 +65,7 @@ export const loginUser = async(req,res)=>
 
 
   catch (error) {
-    console.error(error); // helpful for debugging
+    console.error(error); 
     res.status(500).json({ message: "Error occurred, please try again later" });
   }
 }
@@ -72,10 +73,21 @@ export const loginUser = async(req,res)=>
 //get all users
 export const getAllUsers = async(req, res) => {
   try {
-    const users = await User.find(); //find all users in the database
-    res.status(200).json(users); //return the users
+    const users = await User.find(); //finds all users from database
+    res.status(200).json(users); 
   } catch (error) {
-    console.error(error); // helpful for debugging
-    res.status(500).json({ message: "Error occurred, please try again later" });
+    console.error(error); 
+    res.status(500).json({ message: "Error occurred!! please try again later" });
+  }
+}
+
+//logout user
+export const logoutUser = async(req,res) => {
+  try {
+    res.clearCookie('token'); //clears the cookie
+    res.status(200).json({message:"Successfully logged out"});
+  } catch (error) {
+    console.error(error); 
+    res.status(500).json({ message: "Error occurred!! please try again later" });
   }
 }
