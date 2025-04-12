@@ -42,3 +42,8 @@ export const authorize = (roles =[])=>{
 
     ];
 };
+
+
+export const isAdmin = () => authorize(['admin']);
+export const isSuperAdmin = () => authorize(['superadmin']);
+
