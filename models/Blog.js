@@ -11,7 +11,7 @@ const blogSchema= new mongoose.Schema({//create a new schema
         required:true
     },
     user:{
-        type:mongoose.Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId, //linking user id to blog
         ref:User
     },
     

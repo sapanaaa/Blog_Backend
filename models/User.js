@@ -15,7 +15,15 @@ const userSchema= new mongoose.Schema({//create a new schema
         type:String,
         required:true,
         unique:false
-    }
+    },
+    role:{
+        type:String,
+        enum:['user','admin','superadmin'],
+        default:'user'//user is default role
+    },
+    refreshToken:{
+        type:String
+    },
 
 });
 
