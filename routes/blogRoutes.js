@@ -4,7 +4,7 @@ import { verifyToken, authorize } from '../middlewares/authMiddleware.js';
 import { isAdmin, isSuperAdmin } from '../middlewares/authMiddleware.js';
 const router = express.Router();
 
-router.post('/create',verifyToken, createBlogPost);
+router.post('/create',verifyToken, authorize, createBlogPost);
 router.get('/get', getALLBlogPosts);
 router.get('/:id', getBlogPostById);
 
