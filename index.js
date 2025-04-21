@@ -6,24 +6,31 @@ import connectdb from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
 
-
 dotenv.config();
 
 const app = express();
-connectdb();//connect mongodb
+connectdb(); // Connect to MongoDB
 
-app.use(cors());
-app.use(express.json());
+// Middleware to parse JSON request body
+app.use(express.json()); // This is the key to fixing the "undefined" error
+
+// Enable CORS
+app.use(cors({
+    origin: "http://localhost:5173", // Frontend URL
+    credentials: true, // Allow cookies to be sent with requests
+    
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["Authorization"],
+}));
+
+// Cookie parser middleware
 app.use(cookieParser());
 
+// Routes
+app.use("/api/users", userRoutes);
+app.use("/api/blogs", blogRoutes);
 
-//routes
-app.use('/api',userRoutes);
-app.use('/api',blogRoutes);
-
-//start server
-const PORT= 8080;
-
-app.listen(PORT, ()=>{
-    console.log("The server is currently running at port 8080 ");
-});
+// Start server
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

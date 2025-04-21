@@ -73,51 +73,59 @@ export const registerUser = async (req, res) => {
 
 
 export const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-  
-    if (!email || !password) {
-      return res.status(400).json({ message: "You are not authorized user😡🤬!!" });
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "You are not authorized user😡🤬!!" });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Email not found😒" });
     }
-  
-    try {
-      const user = await User.findOne({ email });
-      if (!user) {
-        return res.status(400).json({ message: "Email not found😒" });
-      }
-  
-      const isPasswordCorrect = await bcrypt.compare(password, user.password);
-      if (!isPasswordCorrect) {
-        return res.status(400).json({ message: "Wrong password please write correct password" });
-      }
-  
-      // ✅ Generate access & refresh tokens using your utility functions
-      const accessToken = generateAccessToken(user._id, user.name, user.role, user.email);
-      const refreshToken = generateRefreshToken(user._id);
-  
-      // ✅ Set access token in HTTP-only cookie
-      res.cookie('token', accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'Production',
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 1000 // 1 hour
-      });
-  
-      // ✅ Optionally send refresh token as well (in a separate cookie or response)
-      res.cookie('refreshToken', refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'Production',
-        sameSite: 'strict',
-        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
-      });
-  
-      const { password: _, ...userData } = user.toObject();
-      res.status(200).json({ message: "Successfully logged in 🥳🥳", user: userData });
-  
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error occurred, please try again later" });
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ message: "Wrong password please write correct password" });
     }
-  };
+
+    // ✅ Generate access & refresh tokens
+    const accessToken = generateAccessToken(user._id, user.name, user.role, user.email);
+    const refreshToken = generateRefreshToken(user._id);
+
+    // ✅ Set access token in HTTP-only cookie
+    res.cookie('AccessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'Production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 1000 // 1 hour
+    });
+
+    // ✅ Set refresh token in HTTP-only cookie
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'Production',
+      sameSite: 'strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+    });
+
+    // ✅ Remove password from user object
+    const { password: _, ...userData } = user.toObject();
+
+    // ✅ Send response with tokens and user data
+    res.status(200).json({
+      message: "Successfully logged in 🥳🥳",
+      user: userData,
+      accessToken,
+      refreshToken
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error occurred, please try again later" });
+  }
+};
   
 
 //logout user
