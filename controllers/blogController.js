@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 //creating new blog
 export const createBlogPost = async(req, res)=>{
     try{
-        const token = req.cookies.token;
+        const token = req.cookies.AccessToken || req.headers['authorization']?.split(' ')[1]; // Check for token in cookies or headers
 
         if(!token){
             return res.status(401).json({message: "You are not authorized user!!! Token not found in cookies"});

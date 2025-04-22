@@ -6,7 +6,6 @@ const router = express.Router();
 router.post(
     '/create',
     verifyToken,
-    ...authorize('admin'), // ✅ spread the array returned by authorize()
     createBlogPost
   );
   

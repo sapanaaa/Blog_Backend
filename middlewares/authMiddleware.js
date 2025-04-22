@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import User from "../models/User.js";
 
 export const verifyToken = (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies.AccessToken || req.headers['authorization']?.split(' ')[1]; // Check for token in cookies or headers
 
   if (!token) {
     return res.status(401).json({ message: "No token, authorization denied" });
